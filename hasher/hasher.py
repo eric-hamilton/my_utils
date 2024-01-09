@@ -81,7 +81,7 @@ if __name__ == "__main__":
     current_folder = os.path.dirname(os.path.abspath(sys.argv[0]))
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-f", "--folder")
+    parser.add_argument("-f", "--folder", help="Perform hash in selected folder.")
     parser.add_argument("-r", "--recursive", action="store_true", help="Hash recursively")
     parser.add_argument("-d", "--duplicates_only", action="store_true", help="Only show duplicates")
     parser.add_argument("-i", "--ignore", nargs='+', default=[], help="Folders to ignore")

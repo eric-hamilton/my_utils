@@ -93,6 +93,12 @@ def write_output_csv(results, output_name):
         writer = csv.writer(outfile)
         writer.writerows(results)
  
+def dump_seeds_to_console(results):
+    hash_pattern = re.compile(r'\b[0-9a-fA-F]{40}\b')
+    seeds = hash_pattern.findall(results)
+    for seed in seeds:
+        print(seed)
+
 def main(): 
     csv_header = None
     file_path = None
@@ -143,6 +149,9 @@ def main():
                 elif file_type == "csv":
                     output_name = f"{filename}_{query}.csv"
                     write_output_csv(search_results, output_name)
+
+            elif choice in ["s", "seeds"]:               
+                dump_seeds_to_console(search_results)
         print("")
 
 
