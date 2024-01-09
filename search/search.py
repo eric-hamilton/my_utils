@@ -2,6 +2,7 @@ import csv
 import sys
 import os
 import re
+import io
 
 
 def get_args(query):
@@ -133,12 +134,18 @@ def main():
             choice = input("There are a lot of results. Do you want to print to console? y/n\n").lower()
             if choice in ["y", "yes"]:
                 for result in search_results:
-                    print(result)
+                    if isinstance(result, list):
+                        print(" ".join(result))
+                    else:
+                        print(result)
             else:
                 print()
         else:
             for result in search_results:
-                print(result)
+                if isinstance(result, list):
+                    print(" ".join(result))
+                else:
+                    print(result)
 
         if search_results:
             choice = input("Write to file? y/n\n").lower()
@@ -150,7 +157,12 @@ def main():
                     output_name = f"{filename}_{query}.csv"
                     write_output_csv(search_results, output_name)
 
-            elif choice in ["s", "seeds"]:               
+            elif choice in ["s", "seeds"]:
+                if file_type == "csv":
+                    output = io.StringIO()
+                    writer = csv.writer(output, quoting=csv.QUOTE_NONNUMERIC)
+                    writer.writerow(search_results)
+                    search_results = output.getvalue()
                 dump_seeds_to_console(search_results)
         print("")
 
