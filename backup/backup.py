@@ -1,9 +1,8 @@
 import os
-import sys
 import json
-from pathlib import Path
 import configparser
 import shutil
+import sys
 
 def read_config(config_file):
     config = configparser.ConfigParser()
@@ -29,6 +28,7 @@ def read_config(config_file):
         }
     return backupables
 
+
 def backup_item(source, dest, item_type, copy_all):
     if os.path.isdir(dest):
         if item_type == "file":
@@ -53,6 +53,7 @@ def backup_item(source, dest, item_type, copy_all):
     else:
         return f"Could not find dest: {dest} (source = {source})"
 
+
 def main(backupables):
     fails = []
     successes = 0
@@ -72,11 +73,21 @@ def main(backupables):
             fails.append(f"Could not find source: {source}")
     return successes, fails
 
+
 if __name__ == '__main__':
     try:
-        script_dir = Path(__file__).resolve().parent.parent
-        config_path = script_dir.joinpath("data/backup.ini")
-        backupables = read_config(config_path)
+        config_path = os.environ.get("BACKUP_CONFIG_PATH")
+        if os.path.exists(config_path):
+            try:
+                backupables = read_config(config_path)
+            except Exception as e:
+                print(f"Error reading config path: {e}")
+                
+                sys.exit()
+        else:
+            print("No config path found @ \"BACKUP_CONFIG_PATH\"")
+            sys.exit()
+        
         successes, fails = main(backupables)
         for fail in fails:
             print(fail)

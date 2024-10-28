@@ -10,20 +10,23 @@ class Editor:
         self.cursor_state = False
         self.cursor_buffer = ""
         self.changes = False
-        
+
+
     def load_data(self, data):
         # Called at the beginning of edit to instantiate data
         data_lines = data.decode().split("\n")
         data_lines.insert(0,"")
         data_lines.insert(0,"")
         self.data_lines = data_lines
-    
+
+
     def close(self):
         self.editing = False
         console.disable_raw_mode()
         combined_lines = "\n".join(self.data_lines)
         self.data = combined_lines.encode("utf-8")
-    
+
+
     def draw_cursor(self, buffer_data):
         cursor_char = "█"
         line = buffer_data[self.cursor_row+1]
@@ -31,7 +34,8 @@ class Editor:
         line_b = line[self.cursor_col+1:]
         buffer_data[self.cursor_row+1] = ''.join([line_a, cursor_char, line_b])
         return buffer_data
-        
+
+
     def place_character_into_data(self, character, row, col):
         line = self.data_lines[row]
         line_a = line[:col]
@@ -39,6 +43,7 @@ class Editor:
         #self.cursor_buffer = line_b[0]
         #line_b = ""+line_b[1:]
         self.data_lines[row] = ''.join([line_a, character, line_b])
+
 
     def remove_character_from_data(self, row, col, offset):
         line = self.data_lines[row]     
@@ -71,9 +76,7 @@ class Editor:
         console.print_at(self.screen_rows, 5, f"row:{self.cursor_row} col:{self.cursor_col} cursor:{self.cursor_state}")
         console.move_cursor(cursor_row, self.cursor_col+col_offset) 
         
-            
 
-    
     def interpret_input(self, key):
         if key == "up":
             self.cursor_row -= 1
@@ -132,6 +135,7 @@ class Editor:
                 self.place_character_into_data(key, self.cursor_row+1, self.cursor_col)
                 self.cursor_col +=len(key)
     
+
     def switch_cursor_state(self):
         if self.cursor_state:
             self.cursor_state = False
@@ -159,10 +163,3 @@ class Editor:
                 self.editing=False
                 self.data = "\n".join(self.data_lines)
         console.clear()
-        
-            
-            
-
-if __name__ == "__main__":
-    editor = Editor()
-    editor.edit(b"what is this\ntellmefarts")

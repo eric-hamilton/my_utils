@@ -12,11 +12,12 @@ def get_hash(file_path, chunk_size=4096, hash_algorithm=hashlib.sha256):
     with open(file_path, 'rb') as file:
         for chunk in iter(lambda: file.read(chunk_size), b''):
             hasher.update(chunk)
-
     return hasher.hexdigest()
+
 
 def print_hash(path, hash_value):
     print(f"{path} > {hash_value}")
+
 
 def hash_folder(folder_path, recursive, duplicates_only, ignoring):
     global all_hashes
@@ -46,6 +47,7 @@ def hash_folder(folder_path, recursive, duplicates_only, ignoring):
         dupe_print()
     print(f"Skipped {skipped} files.")
 
+
 def dupe_print():
     global all_hashes
     dupes_found = False
@@ -60,6 +62,7 @@ def dupe_print():
 
     if not dupes_found:
         print("No duplicates found")
+
 
 def main(current_folder, args):
     if args.folder:
@@ -76,6 +79,7 @@ def main(current_folder, args):
     else:
         full_path = os.getcwd()
         hash_folder(full_path, args.recursive, args.duplicates_only, args.ignore)
+
 
 if __name__ == "__main__":
     current_folder = os.path.dirname(os.path.abspath(sys.argv[0]))
