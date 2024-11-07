@@ -43,7 +43,6 @@ class MainWindow(QMainWindow):
         self.create_menu_bar()
 
         
-        
     def create_menu_bar(self):
         menubar = self.menuBar()
         
@@ -82,6 +81,7 @@ class AppButton(QPushButton):
         self.keep_open = program_info["keep_open"]
         self.clicked.connect(self.runProgram)
 
+
     def runProgram(self):
         self.keep_open = False
         if self.keep_open:
@@ -114,6 +114,7 @@ def read_config(config_file):
                 }
     return programs
 
+
 def run_program(given_program, programs, args):
     arg_list = args[2:]
     arg_list = " " + " ".join(arg_list)
@@ -127,15 +128,26 @@ def run_program(given_program, programs, args):
     
     print(f"Could not find program: {given_program}")
 
+
 def list_programs(programs):
     for program in programs:
         print(f"{program}: -> {programs[program]['arg_names']}\n")
-        
+
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-    conf_path = os.path.join(script_directory, 'config.ini')
-    programs = read_config(conf_path)
+
+    config_path = os.environ.get("LAUNCH_CONFIG_PATH")
+    if os.path.exists(config_path):
+        try:
+            programs = read_config(config_path)
+        except Exception as e:
+            print(f"Error reading config path: {e}")            
+            sys.exit()
+    else:
+        print("No config path found @ \"LAUNCH_CONFIG_PATH\"")
+        sys.exit()
+
     if len(sys.argv) >= 2:
         given_program = sys.argv[1].lower()
         if given_program == "list":

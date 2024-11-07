@@ -126,6 +126,7 @@ ascii_chars = {
     125: "}",
     126: "~"
 }
+
 special_chars = {
     134: "f12",
     72: "up",

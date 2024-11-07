@@ -17,6 +17,7 @@ def get_file(file_path):
     else:
         sys.exit()
 
+
 def confirm(message):
     try:
         while True:
@@ -30,6 +31,7 @@ def confirm(message):
                 print("Invalid choice.")
     except KeyboardInterrupt:
         sys.exit()
+
 
 def generate_byte_key(passkey):    
     salt_string = parser.get("CONFIG", "salt")
@@ -45,26 +47,31 @@ def generate_byte_key(passkey):
     url_safe_key = base64.urlsafe_b64encode(key_bytes)
     return url_safe_key
 
+
 def load_from_file(filename):
     with open(filename, 'rb') as file:
         data = bytes(file.read())
         return data
 
+
 def write_to_file(filename, data):
     with open(filename, 'wb') as file:
         file.write(data)
-        
+
+
 def decrypt_data(encrypted_data, passkey):
     passkey = generate_byte_key(passkey)
     cipher = Fernet(passkey)
     decrypted_data = cipher.decrypt(encrypted_data)
     return decrypted_data
-    
+
+
 def encrypt_data(decrypted_data, passkey):    
     passkey = generate_byte_key(passkey)
     cipher = Fernet(passkey)
     encrypted_data = cipher.encrypt(decrypted_data)
     return encrypted_data
+
 
 def print_usage_message():
     print("""Usage: 'peek' (optional args)
@@ -73,7 +80,8 @@ def print_usage_message():
     decrypt   (decrypt the data file in place)
     data      (prints the path of the data file)
     config    (prints the path of the config file)""")
-    
+
+
 def get_passkey():
     try:
         while True:
@@ -85,10 +93,9 @@ def get_passkey():
                 return key
     except KeyboardInterrupt:
         sys.exit()
-        
+
+
 if __name__ == "__main__":
-    
-    
     config_path = os.environ.get("PEEK_CONFIG_PATH")
     if os.path.exists(config_path):
         try:
@@ -101,7 +108,6 @@ if __name__ == "__main__":
         sys.exit()
     file_path = parser.get("CONFIG", "default_filepath")
 
-     
     if len(sys.argv) == 2:
         given_arg = sys.argv[1]
         if given_arg == "encrypt":
